@@ -62,9 +62,7 @@ public class PiCalculator {
             e.printStackTrace();
         }
         result = result.multiply(new BigDecimal(4));
-        System.out.println(result);
         result = result.setScale(floatingPoint, RoundingMode.DOWN);
-        System.out.println(result);
         return result.toString();
     }
 
