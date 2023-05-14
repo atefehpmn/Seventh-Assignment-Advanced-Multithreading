@@ -14,18 +14,16 @@ public class Operator extends Thread {
     public void run() {
         for (int i = 0; i < 10; i++)
         {
-            try {
-                sem.acquire();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+            sem.acquireUninterruptibly();
             Resource.accessResource();         // critical section - a Maximum of 2 operators can access the resource concurrently
             try {
                 sleep(500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            sem.release();
+            finally {
+                sem.release();
+            }
         }
     }
 }

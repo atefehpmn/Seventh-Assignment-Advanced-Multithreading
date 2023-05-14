@@ -2,43 +2,21 @@
 
 
 ## Introduction
-In this assignment, you are given three problems focused on various areas of multithreaded programming. Solve each exercise according to the provided guidelines.
+In this assignment, I should solve three problems related to multithreaded programming and its different areas.
 
-
-## Objectives
-- Review the concepts of multithreaded programming and utilize them correctly
-- Research pi calculation algorithms
-- Familiarize yourself with the Semaphore, CountDownLatch, and BigDecimal classes
-- Write a report on the assignment
-
-
-## Tasks
-1. Fork this repository and clone the fork to your local machine. Ensure to create a new Git branch before starting your work
-2. Complete the following exercises based on the instructions provided:
-
-   - `Calculate Pi`: Calculate the value of pi up to 1000 digits after the floating point. Find more instructions in the `PiCalculator` class.
-   - `Priority Simulator`: Manage three different thread types and ensure the order of execution between them is correctly handled. Try to use a `CountDownLatch` for this exercise. Find more instructions in the `Runner` class.
-   - `Semaphore`: Solve a synchronization problem using a Semaphore that allows 2 threads to enter the critical section.  Find more instructions in the `Controller` class.
-3. Commit your changes and push your commits to your fork on Github. Create a pull request (assigned to your mentor) to merge your changes to the main branch of your fork on Github.
-
-
-## Notes
-- You can find unit tests for the first two exercises (`Calculate Pi` and `Priority Simulator`). Use these to ensure you've implemented the code correctly.
-- You are NOT allowed to use the `Thread.Sleep()` method for the `Priority Simulator` exercise.
-- You are NOT allowed to use any other form of synchronization tool for the `Semaphore` exercise. Only Semaphores may be used.
-- Your report should include details on the solution you chose for each exercise (and why you chose it). Try to focus on the `Calculate Pi` exercise and explain the mathematical algorithm(s) you tried in detail.
-
-
-## Evaluation
-- Your code should compile and run without any errors
-- Your code should be well-organized, readable, properly commented and should follow clean code principles
-- Your code should pass all of the provided unit tests
-- You should use Git for version control and include meaningful commit messages
-
-
-## Submission
-- Push your code to your fork on Github
-- Upload your report to your fork on GitHub
-
-
-The deadline for submitting your code is Wednesday, May 10 (20th of Ordibehesht). Good luck, happy coding and à bientôt!
+## Implementation
+### Pi Calculator
+- I used an infinite series to calculate Pi. Based on pi = 4arctan(1) and the Maclaurin series for arc tangent, the series can be written as: pi = 4 (1 - 1/3 + 1/5 - 1/7...).
+- `BigDecimal` class should be used when calculating very long numbers.
+- I created a `FixedThreadPool` with 4 threads and each instance of the `CalculatePi` class is executed in this thread pool.
+- This algorithm worked best among the ones I tried and although it passed the easy test, other tests failed. This may be because it needs to go so far in the series to reach the desired accuracy.
+### Priority Stimulator
+- This task is done using `CountDownLatch` class. An object of this class lets you count down from a number that you specify and makes one or more threads wait until the latch reaches a count of zero. So one or more threads can count down the latch and when it finally equals zero, one or more threads that are waiting on the latch can then proceed.  
+- In order to use this, three CountDownLatches are made for each class using their own count. Then, latches are assigned to classes and in the `run` method, `CountDownLatch.countDown()` is called so that everytime the thread starts, one is subtracted from the latch. The massage is also printed in this method.
+- It's worth mentioning that after starting the specified number of each thread type (in the for loop), `CountDownLatch.await()` is called to wait until it is finished and then move on to the next kind of thread.  
+### Semaphore
+- Semaphore in Java is a thread synchronization construct that sends signals to the threads and protects critical sections. With the use of counters, Semaphore manages access to the shared resources.
+- Since, in this assignment, a maximum of 2 operators should access the resource concurrently, an instance of the `Semaphore` class with 2 permits. It also has a second parameter called fairness and when set to true, it ensures that whichever thread that was waiting for the permit the longest will be given the permit first. This single instance of Semaphore is shared between all threads so that the threads will be synchronized.
+- The Semaphore instance is acquired before the critical section. You can either surround `Semaphore.acquire()` with try catch or use `Semaphore.acquireUninterruptibly()`. After the critical section, Semaphore is released. Additionally, Semaphores can acquire and release more than one permit.
+- Current thread name and system time is printed in the `Resource` class.
+- And don’t forget to put release in a `finally` block.
